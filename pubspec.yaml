@@ -31,6 +31,7 @@ dependencies:
   flutter_svg: ^0.22.0
   animated_text_kit: ^4.2.1
   animated_counter: ^1.0.0
+  url_launcher: ^6.0.10
 
 dev_dependencies:
   flutter_native_splash: ^1.2.3
@@ -38,7 +39,8 @@ dev_dependencies:
     sdk: flutter
 
 flutter_native_splash:
-  color: "#191923"
+  image: "assets/images/Arnau.png"
+  color: "#1E1E28"
   android: true
   ios: true
   web: true

@@ -1,13 +1,20 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_profile/components/utils.dart';
 import 'package:flutter_profile/constants.dart';
 import 'package:flutter_profile/responsive.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class HomeBanner extends StatelessWidget {
+class HomeBanner extends StatefulWidget {
   const HomeBanner({
     Key? key,
   }) : super(key: key);
 
+  @override
+  _HomeBannerState createState() => _HomeBannerState();
+}
+
+class _HomeBannerState extends State<HomeBanner> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
@@ -52,13 +59,15 @@ class HomeBanner extends StatelessWidget {
                     SizedBox(height: defaultPadding),
                     if (!Responsive.isMobileLarge(context))
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Utils.launchMail(mail: 'arnau.font.2000@gmail.com');
+                        },
                         style: ElevatedButton.styleFrom(
                           primary: primaryColor,
                           padding: EdgeInsets.all(defaultPadding),
                         ),
                         child: Text(
-                          'EXPLORE NOW',
+                          'CONTACT ME',
                           style: TextStyle(color: darkColor),
                         ),
                       )

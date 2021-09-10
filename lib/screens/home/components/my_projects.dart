@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_profile/components/hero_dialog_route.dart';
 import 'package:flutter_profile/constants.dart';
 import 'package:flutter_profile/models/Project.dart';
 import 'package:flutter_profile/responsive.dart';
+
+final String _project_tag = 'project-tag';
 
 class MyProjects extends StatelessWidget {
   const MyProjects({
@@ -61,7 +64,7 @@ class ProjectsGridView extends StatelessWidget {
         ),
         itemBuilder: (context, index) {
           final project = demo_projects[index];
-          return ProjectCard(project: project);
+          return ProjectCard(project: project, index: index);
         });
   }
 }
@@ -70,52 +73,130 @@ class ProjectCard extends StatelessWidget {
   const ProjectCard({
     Key? key,
     required this.project,
+    required this.index,
   }) : super(key: key);
 
   final Project project;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: EdgeInsets.all(0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       color: secondaryColor,
       child: Padding(
         padding: const EdgeInsets.all(defaultPadding),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              project.title!,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.subtitle2,
-            ),
-            const SizedBox(height: defaultPadding),
-            Flexible(
-              child: Text(
-                project.description!,
-                maxLines: 10,
+        child: Hero(
+          tag: _project_tag + project.title!,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                project.title!,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(height: 1.5),
+                style: Theme.of(context).textTheme.subtitle2,
               ),
-            ),
-            const SizedBox(height: defaultPadding),
-            TextButton(
-              style: ButtonStyle(
-                  overlayColor: MaterialStateColor.resolveWith(
-                      (states) => primaryColor.withOpacity(0.1))),
-              onPressed: () {},
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
+              const SizedBox(height: defaultPadding),
+              Flexible(
                 child: Text(
-                  'Read more  >>',
-                  style: TextStyle(color: primaryColor),
+                  project.description!,
+                  maxLines: 10,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyText1,
+                ),
+              ),
+              const SizedBox(height: defaultPadding),
+              TextButton(
+                style: ButtonStyle(
+                    overlayColor: MaterialStateColor.resolveWith(
+                        (states) => primaryColor.withOpacity(0.1))),
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(HeroDialogRoute(builder: (context) {
+                    return ProjectExpandedCard(project: project, index: index);
+                  }));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: defaultPadding / 2),
+                  child: Text(
+                    'Read more  >>',
+                    style: TextStyle(color: primaryColor),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ProjectExpandedCard extends StatelessWidget {
+  const ProjectExpandedCard(
+      {Key? key, required this.project, required this.index})
+      : super(key: key);
+
+  final Project project;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: Responsive.isDesktop(context)
+          ? EdgeInsets.symmetric(horizontal: 200.0)
+          : EdgeInsets.all(50.0),
+      child: Center(
+        child: Card(
+          margin: EdgeInsets.all(0),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          color: secondaryColor,
+          child: Padding(
+            padding: const EdgeInsets.all(defaultPadding),
+            child: Hero(
+              tag: _project_tag + project.title!,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      project.title!,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.subtitle2,
+                    ),
+                    const SizedBox(height: defaultPadding),
+                    Text(
+                      project.description!,
+                      maxLines: 15,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyText1,
+                    ),
+                    const SizedBox(height: defaultPadding),
+                    TextButton(
+                      style: ButtonStyle(
+                          overlayColor: MaterialStateColor.resolveWith(
+                              (states) => primaryColor.withOpacity(0.1))),
+                      onPressed: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: defaultPadding / 2),
+                        child: Text(
+                          'Github repository',
+                          style: TextStyle(color: primaryColor),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
